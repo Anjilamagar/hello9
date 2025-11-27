@@ -8,6 +8,11 @@ const router = express.Router()
 router.post('/register', register)
 
 router.post('/login', login)
+router.get('/test', (req, res, next) =>
+    (req, res) => {
+        res.send("hello from test")
+
+    })
 
 
 
