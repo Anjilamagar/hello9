@@ -1,6 +1,9 @@
 import user from "../models/user.js"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { generateOtp } from "../utils/generator.js"
+import { sendMail } from "../services/sendMail.js"
+import Otp from "../models/otp.js"
 
 
 
@@ -22,14 +25,36 @@ export const register = async (req, res) => {
             password: hashedpassword
         })
 
-        return res.status(400).json({ message: "user already exist", data })
+        const emailExist = await Otp.findOne({ email })
+        const otp = await generateOtp()
+        if (emailExist) {
+            await Otp.findOneAndUpdate({ email }, {
+                otp: otp,
+                isUsed: false
+            })
+        } else {
+            await Otp.create({
+                email: email,
+                otp: otp,
+                isUsed: false
+            })
+        }
 
-
-
+        await sendMail(otp, email)
         return res.status(200).json({
-            message: "login in successfully",
-            data: userExist[0]
+            message: "Verification mail.sent successfully",
+            data
         })
+
+
+
+
+
+
+        // return res.status(200).json({
+        //     message: "login in successfully",
+        //     data
+        // })
 
 
 
@@ -43,6 +68,9 @@ export const register = async (req, res) => {
 
     }
 }
+
+
+
 
 
 export const login = async (req, res) => {

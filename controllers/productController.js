@@ -7,6 +7,7 @@ export const createProduct = async (req, res) => {
         const brand = req.body.brand
         const price = req.body.price
         const description = req.body.description
+        console.log(name, price, brand, description)
         const result = await Product.create({
             name: name,
             brand: brand,

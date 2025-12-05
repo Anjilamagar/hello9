@@ -1,12 +1,25 @@
-export const isLoggedIn = (req, res, next) => {
+import jwt from 'jsonwebtoken'
+
+export const isLoggedIn = async (req, res, next) => {
     try {
-        console.log(req.headers.authorization);
+        // console.log(req.headers.authorization);
+        // console.log(req.cookies)
 
-        return res.send(req.headers.authorization)
+        const token = req.cookies.authToken
+        if (!token) {
+            return res.status(401).json({
+                message: "login required"
+            })
+        }
+        const decoded = await jwt.verify(token, 'thisissecretpassword')
+        req.user = decoded
 
+        next()
+
+        // return res.send(decoded)
 
     } catch (error) {
-        res.status(40).json({
+        res.status(402).json({
             message: "Error ccured in middleware.",
             error: error.message
         })
