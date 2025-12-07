@@ -3,6 +3,11 @@ import Product from "../models/product.js"
 // creating product
 export const createProduct = async (req, res) => {
     try {
+        console.log(req.file);
+        const image = req.file.path
+
+
+
         const name = req.body.name
         const brand = req.body.brand
         const price = req.body.price
@@ -12,7 +17,8 @@ export const createProduct = async (req, res) => {
             name: name,
             brand: brand,
             price: price,
-            description: description
+            description: description,
+            image: image
         })
         res.json({
             message: "Product create",

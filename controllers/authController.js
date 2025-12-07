@@ -97,7 +97,7 @@ export const login = async (req, res) => {
             phone: userExist[0].phone,
             fullname: userExist[0].fulLname
         }
-        const token = jwt.sign(payload, "thisissecretpassword")
+        const token = jwt.sign(payload, "thisiss  ecretpassword")
 
         res.cookie('authToken', token)
         return res.status(200).json({

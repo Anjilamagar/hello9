@@ -18,9 +18,15 @@ const Login = () => {
         }, 1500);
     };
 
-    const handleSignUp = () => {
-        alert('Sign up clicked! You would navigate to registration page here.');
-    };
+    // const handleSignUp = () => {
+    //     alert('Sign up clicked! You would navigate to registration page here.');
+    // };
+    const handleSignUp = (e) => {
+        e.preventDefault();
+        const body = { email, password, rememberMe, isLoading }
+        axios.post('http://localhost:3000/auth/login', body)
+    }
+
 
     // const [email, setEmail] = useState('')
     // const EmailChange = (event) => {
