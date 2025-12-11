@@ -1,10 +1,11 @@
-import axios from "axios";
-import react, { useState } from "react"
-import { Toaster, toast } from 'sonner';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
+import { toast, Toaster } from 'sonner';
+
+const ProductUpdate = () => {
 
 
-
-const CreateProduct = () => {
     const [name, setName] = useState('');
     const [brand, setBrand] = useState('');
     const [price, setPrice] = useState('');
@@ -35,12 +36,29 @@ const CreateProduct = () => {
 
 
 
+
+
+
+    const params = useParams()
+    const { id } = params
+
+
+
+    const fetchProduct = async () => {
+        const result = await axios.get(`http://localhost:3000/product/getProductById/${id}`)
+
+        setDescription(result.data.data.description)
+        setName(result.data.data.name)
+        setBrand(result.data.data.brand)
+        setPrice(result.data.data.price)
+        setImage(result.data.data.image)
+    }
+
+    useEffect(() => { fetchProduct() }, [])
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // const body = { name, brand, description, price }
-
-        // console.log({ name, description, price });
-        console.log(image);
 
         const body = new FormData()
 
@@ -50,35 +68,41 @@ const CreateProduct = () => {
         body.append('brand', brand)
         body.append('description', description)
 
-        const response = await axios.post('http://localhost:3000/product/createProduct', body)
+        const response = await axios.put(`http://localhost:3000/product/updateProduct/${id}`, body)
 
         if (response.status != 200) {
-            toast.error('Error occured to create')
+            toast.error('Error occured to update')
         }
 
         if (response.status == 200) {
-            setName('')
-            setBrand('')
-            setDescription('')
-            setPrice('')
-            setImage('')
 
-            toast.success("Successfully created")
+            toast.success("Successfully updated")
+            fetchProduct()
         }
 
 
     }
+    // const body = { name, brand, description, price }
+
+    // console.log({ name, description, price });
+    // console.log(image);
+
+
+
+
+
     return (
+
         <div>
 
             <div className='h-[100vh] w-[100vw] flex justify-center items-center'>
                 <form className='border-3 border-white rounded-[50px] gap-5 flex flex-col p-20 justify-center items-center'>
 
                     <label htmlFor="productName" required>Product Name:</label>
-                    <input type="text" onChange={namechange} name="name" defaultValue="" placeholder="Product Name" className='border-2 border-black rounded-lg p-2' />
+                    <input type="text" onChange={namechange} name="name" value={name} placeholder="Product Name" className='border-2 border-black rounded-lg p-2' />
 
                     <label htmlFor="productBrand" >Brand:</label>
-                    <input type="text" onChange={brandchange} name="brand" defaultValue="" placeholder="Product Brand" className='border-2 border-black rounded-lg p-2' />
+                    <input type="text" onChange={brandchange} name="brand" value={brand} placeholder="Product Brand" className='border-2 border-black rounded-lg p-2' />
 
 
                     <label htmlFor="price" required>Price:</label>
@@ -96,7 +120,8 @@ const CreateProduct = () => {
             </div>
             <Toaster />
         </div>
+
     )
 }
 
-export default CreateProduct
+export default ProductUpdate

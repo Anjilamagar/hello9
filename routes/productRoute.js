@@ -9,7 +9,8 @@ import { upload } from '../config/Cloudinary.js'
 const router = express.Router()
 
 router.post('/createProduct', upload.single('image'), createProduct)
-router.put('/updateProduct/:id', isLoggedIn, isAdmin, updateProduct)
+// router.put('/updateProduct/:id', isLoggedIn, isAdmin, updateProduct)
+router.put('/updateProduct/:id', upload.single('image'), updateProduct)
 router.delete('/deleteProduct/:id', isLoggedIn, isAdmin, deleteProduct)
 router.delete('/deleteProductN', isLoggedIn, isAdmin, deleteProductN)
 
